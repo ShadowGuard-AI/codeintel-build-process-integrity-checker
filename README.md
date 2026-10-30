@@ -1,3 +1,5 @@
+![Banner](banner.png)
+
 # codeintel-Build-Process-Integrity-Checker
 Verifies the integrity of the build process by checking for unexpected modifications to build scripts, dependencies, or compiler settings. Alerts on potential tampering or supply chain attacks. - Focused on Tools for static code analysis, vulnerability scanning, and code quality assurance
 

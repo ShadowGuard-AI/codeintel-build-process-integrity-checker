@@ -76,6 +76,10 @@ def check_file_integrity(filepath, baseline_hash):
     if not filepath or not baseline_hash:
         return True # If no file or baseline hash provided, skip check
 
+    # Hashes get copied out of all kinds of tooling, some of it upper
+    # case or padded. hexdigest() is lower case, so compare in that
+    # form instead of failing a correct hash on its spelling.
+    baseline_hash = baseline_hash.strip().lower()
     calculated_hash = calculate_sha256(filepath)
 
     if calculated_hash is None:

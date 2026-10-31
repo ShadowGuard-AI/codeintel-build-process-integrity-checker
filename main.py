@@ -73,8 +73,11 @@ def check_file_integrity(filepath, baseline_hash):
     Returns:
         bool: True if the file's hash matches the baseline hash, False otherwise.
     """
-    if not filepath or not baseline_hash:
-        return True # If no file or baseline hash provided, skip check
+    if not filepath:
+        return True # No file was named for this slot, so there is nothing to skip.
+    if not baseline_hash:
+        logging.info(f"Skipped integrity check for {filepath}: no baseline hash supplied.")
+        return True
 
     # Hashes get copied out of all kinds of tooling, some of it upper
     # case or padded. hexdigest() is lower case, so compare in that
@@ -162,32 +165,66 @@ def main():
         logging.error(f"Compiler settings file not found: {args.compiler_settings}")
         sys.exit(1)
 
-    # Integrity Checks
-    build_script_integrity = check_file_integrity(args.build_script, args.baseline_hash_build_script)
-    dependency_file_integrity = check_file_integrity(args.dependency_file, args.baseline_hash_dependency_file)
-    compiler_settings_integrity = check_file_integrity(args.compiler_settings, args.baseline_hash_compiler_settings)
+    # Integrity Checks. The build script is the primary artifact: a
+    # named build script with no baseline is an error and exits 1.
+    # Every other named file with no baseline is logged as skipped.
+    named_files = [
+        ('build script', args.build_script, args.baseline_hash_build_script, True),
+        ('dependency file', args.dependency_file, args.baseline_hash_dependency_file, False),
+        ('compiler settings', args.compiler_settings, args.baseline_hash_compiler_settings, False),
+    ]
+    checked = 0
+    skipped = 0
+    integrity_failed = False
+    build_script_missing_baseline = False
+    for label, filepath, baseline_hash, is_primary in named_files:
+        if not filepath:
+            continue
+        if not baseline_hash:
+            if is_primary:
+                logging.error(
+                    f"No baseline hash supplied for the build script {filepath}: "
+                    "nothing can be checked for the primary artifact.")
+                build_script_missing_baseline = True
+            else:
+                logging.info(f"Skipped integrity check for {filepath}: no baseline hash supplied.")
+            skipped += 1
+            continue
+        checked += 1
+        if not check_file_integrity(filepath, baseline_hash):
+            integrity_failed = True
 
-    if not build_script_integrity or not dependency_file_integrity or not compiler_settings_integrity:
+    logging.info(f"Integrity summary: checked {checked} file(s), skipped {skipped} file(s).")
+
+    if build_script_missing_baseline:
+        logging.error("Build script has no baseline hash. Aborting.")
+        sys.exit(1)
+    if checked == 0:
+        logging.error("No files were checked. Aborting.")
+        sys.exit(1)
+    if integrity_failed:
         logging.error("One or more integrity checks failed. Aborting.")
         sys.exit(1)
 
-    # Security Scans
+    # Security Scans. A scanner the operator asked for that is missing
+    # or returns non zero makes the run exit 1.
+    scan_outcomes = []
     if args.run_bandit:
-        if not run_security_scan('bandit', args.build_script, args.offensive_scan):
-            logging.warning("Bandit scan failed. Continuing...")
-
+        scan_outcomes.append(('bandit', run_security_scan('bandit', args.build_script, args.offensive_scan)))
     if args.run_flake8:
-        if not run_security_scan('flake8', args.build_script):
-            logging.warning("Flake8 scan failed. Continuing...")
-
+        scan_outcomes.append(('flake8', run_security_scan('flake8', args.build_script)))
     if args.run_pylint:
-        if not run_security_scan('pylint', args.build_script):
-            logging.warning("Pylint scan failed. Continuing...")
-
+        scan_outcomes.append(('pylint', run_security_scan('pylint', args.build_script)))
     if args.run_pyre:
-        if not run_security_scan('pyre', '.'): # Assuming current dir is root
-            logging.warning("Pyre scan failed. Continuing...")
+        scan_outcomes.append(('pyre', run_security_scan('pyre', '.')))
 
+    if scan_outcomes:
+        summary = ", ".join(
+            f"{name}: {'passed' if ok else 'failed'}" for name, ok in scan_outcomes)
+        logging.info(f"Scanner outcomes: {summary}")
+        if not all(ok for _, ok in scan_outcomes):
+            logging.error("One or more requested scanners did not run clean. Aborting.")
+            sys.exit(1)
 
     logging.info("Build process integrity checks completed.")
     sys.exit(0)

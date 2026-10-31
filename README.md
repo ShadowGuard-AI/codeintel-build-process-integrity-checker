@@ -1,7 +1,7 @@
 ![Banner](banner.png)
 
 # codeintel-Build-Process-Integrity-Checker
-Verifies the integrity of the build process by checking for unexpected modifications to build scripts, dependencies, or compiler settings. Alerts on potential tampering or supply chain attacks. - Focused on Tools for static code analysis, vulnerability scanning, and code quality assurance
+Verifies the integrity of the build process by checking build scripts, dependency files, and compiler settings files against supplied SHA256 baseline hashes, and alerts on mismatches. The build script is the primary artifact: a named build script with no baseline hash exits 1. Any other named file with no baseline hash is logged as skipped, one line per file, and a closing summary counts checked and skipped files. A run that checked zero files exits 1. If a scanner the operator asked for with --run-bandit, --run-flake8, --run-pylint, or --run-pyre is missing or returns non zero, the run ends with a line naming the scanner outcomes and exits 1.
 
 ## Install
 `git clone https://github.com/ShadowStrikeHQ/codeintel-build-process-integrity-checker`

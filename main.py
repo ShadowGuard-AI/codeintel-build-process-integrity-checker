@@ -52,6 +52,9 @@ def calculate_sha256(filepath):
     try:
         with open(filepath, 'rb') as file:
             while True:
+                # I read in small chunks because a build script is tiny but a
+                # dependency file in this same slot can be a large lock file. The
+                # hash does not care about chunk size, only the order of bytes.
                 chunk = file.read(4096)
                 if not chunk:
                     break
@@ -118,6 +121,9 @@ def run_security_scan(tool, target, offensive=False):
         elif tool == 'pylint':
             command = ['pylint', target]
         elif tool == 'pyre':
+            # I ignore the target argument for pyre. It checks the project it
+            # was set up in, so main passes the current directory and this
+            # branch is the one place where target does not mean a file.
             command = ['pyre', 'check'] # Assuming project dir already pyre-initialized.
         else:
             logging.error(f"Invalid security tool: {tool}")
@@ -140,6 +146,9 @@ def run_security_scan(tool, target, offensive=False):
         print(stdout.decode())
         return True
 
+    # I treat a missing scanner as a failed scan, not a skipped one.
+    # The operator asked for that check by name, so a silent pass
+    # would claim a check ran when nothing ran at all.
     except FileNotFoundError:
         logging.error(f"Tool not found: {tool}. Please ensure it is installed.")
         return False

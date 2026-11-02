@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" role="img" aria-label="The breakwater in three depths: in the far depth waves rise, travel, and break in a slow heavy sequence against the wall while driven cloud moves fast and low overhead, in the middle depth spray breaks over the stones wave by wave and runs back off the stone while the lamp at the end of the arm does not move at all and its light brightens only in the instant spray crosses it, and in the near depth tarred barrels stand still with water dripping from their rims after each spray fall and stopping between falls">
+<rect x="0" y="0" width="1200" height="300" fill="#949c9c"/>
+<g fill="#acb2b2">
+<rect x="60" y="26" width="520" height="12" rx="6"><animate attributeName="x" values="60;180;60" dur="9s" repeatCount="indefinite"/></rect>
+<rect x="420" y="52" width="640" height="12" rx="6"><animate attributeName="x" values="420;560;420" dur="7s" repeatCount="indefinite"/></rect>
+</g>
+<rect x="0" y="196" width="1200" height="104" fill="#3a5c5e"/>
+<g fill="none" stroke="#f4f1e8" stroke-width="3">
+<path d="M120 236 q30 -16 60 0"><animate attributeName="opacity" values="0.2;1;0.2" keyTimes="0;0.4;1" dur="8s" repeatCount="indefinite"/></path>
+<path d="M300 250 q30 -16 60 0"><animate attributeName="opacity" values="0.2;0.2;1;0.2" keyTimes="0;0.3;0.65;1" dur="8s" repeatCount="indefinite"/></path>
+<path d="M480 238 q30 -16 60 0"><animate attributeName="opacity" values="1;0.2;0.2;1" keyTimes="0;0.2;0.8;1" dur="8s" repeatCount="indefinite"/></path>
+</g>
+<polygon points="0,300 0,238 300,214 560,196 700,190 700,224 480,240 240,262 0,282" fill="#2f4f4f"/>
+<g fill="#f4f1e8">
+<g opacity="0"><animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.3;0.45;0.7;1" dur="8s" repeatCount="indefinite"/><ellipse cx="330" cy="196" rx="12" ry="6"/><ellipse cx="366" cy="188" rx="10" ry="5"/><ellipse cx="300" cy="188" rx="9" ry="5"/></g>
+<g opacity="0"><animate attributeName="opacity" values="0;1;0;0;0" keyTimes="0;0.15;0.35;0.6;1" dur="8s" repeatCount="indefinite"/><ellipse cx="540" cy="180" rx="11" ry="6"/><ellipse cx="572" cy="173" rx="9" ry="5"/></g>
+</g>
+<g>
+<rect x="668" y="118" width="30" height="52" fill="#14181a"/>
+<polygon points="668,118 698,118 692,106 674,106" fill="#0c0f11"/>
+<rect x="675" y="126" width="16" height="26" fill="#e8a33d"/>
+<circle cx="683" cy="139" r="30" fill="#e8a33d" opacity="0"><animate attributeName="opacity" values="0;0;0.3;0;0" keyTimes="0;0.3;0.45;0.7;1" dur="8s" repeatCount="indefinite"/></circle>
+<rect x="660" y="170" width="46" height="22" fill="#203636"/>
+</g>
+<g>
+<rect x="52" y="238" width="34" height="52" fill="#1a1c1c"/><rect x="94" y="232" width="36" height="58" fill="#1a1c1c"/><rect x="138" y="240" width="32" height="50" fill="#1a1c1c"/>
+<g stroke="#7aa0a2" stroke-width="3">
+<line x1="69" y1="292" x2="69" y2="292"><animate attributeName="y2" values="292;292;302;302" keyTimes="0;0.45;0.62;1" dur="8s" repeatCount="indefinite"/></line>
+<line x1="112" y1="292" x2="112" y2="292"><animate attributeName="y2" values="292;292;302;302" keyTimes="0;0.45;0.62;1" dur="8s" repeatCount="indefinite"/></line>
+<line x1="154" y1="292" x2="154" y2="292"><animate attributeName="y2" values="292;292;302;302" keyTimes="0;0.45;0.62;1" dur="8s" repeatCount="indefinite"/></line>
+</g>
+</g>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 40" role="img" aria-label="Minor separator: a fine tide table rule with a single centred spray break and the rest of the line empty">
+<rect x="0" y="0" width="1200" height="40" fill="#f4f1e8"/>
+<line x1="0" y1="22" x2="1200" y2="22" stroke="#2f4f4f" stroke-width="1"/>
+<g fill="#2f4f4f"><ellipse cx="600" cy="14" rx="16" ry="5"/></g>
+<g fill="#f4f1e8" stroke="#2f4f4f" stroke-width="1"><ellipse cx="592" cy="11" rx="5" ry="3"/><ellipse cx="608" cy="10" rx="4" ry="3"/></g>
+</svg>

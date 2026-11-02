@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 40" role="img" aria-label="Major separator: a fine tide table rule in deep sea teal across the full width, with a single spray mark breaking over it at wide intervals">
+<rect x="0" y="0" width="1200" height="40" fill="#f4f1e8"/>
+<line x1="0" y1="22" x2="1200" y2="22" stroke="#2f4f4f" stroke-width="2"/>
+<line x1="0" y1="27" x2="1200" y2="27" stroke="#2f4f4f" stroke-width="1"/>
+<g fill="#2f4f4f"><ellipse cx="200" cy="14" rx="16" ry="5"/><ellipse cx="600" cy="14" rx="16" ry="5"/><ellipse cx="1000" cy="14" rx="16" ry="5"/></g>
+<g fill="#f4f1e8" stroke="#2f4f4f" stroke-width="1"><ellipse cx="192" cy="11" rx="5" ry="3"/><ellipse cx="208" cy="10" rx="4" ry="3"/><ellipse cx="592" cy="11" rx="5" ry="3"/><ellipse cx="608" cy="10" rx="4" ry="3"/><ellipse cx="992" cy="11" rx="5" ry="3"/><ellipse cx="1008" cy="10" rx="4" ry="3"/></g>
+</svg>

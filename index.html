@@ -3,103 +3,98 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>codeintel-build-process-integrity-checker: Files Against Their Hashes</title>
-<meta name="description" content="Verifies the integrity of the build process by checking build scripts, dependency files, and compiler settings files against supplied SHA256 baseline hashes, and alerts on mismatches.">
+<title>codeintel-build-process-integrity-checker: The Proving House</title>
 <style>
-@font-face{font-family:'Barlow';src:url('fonts/Barlow.ttf') format('truetype');}
-@font-face{font-family:'Alegreya Sans';src:url('fonts/AlegreyaSans.ttf') format('truetype');}
-:root{--teal:#2f4f4f;--wash:#dfe5e2;--foam:#f4f1e8;--tar:#14181a;--amber:#e8a33d;--ink:#23282a}
-*{box-sizing:border-box}body{margin:0;background:var(--wash);color:var(--ink);font-family:'Alegreya Sans',sans-serif;line-height:1.65}
-h1,h2,h3{font-family:'Barlow',sans-serif;color:var(--tar)}
-.hero{background:linear-gradient(180deg,#949c9c,var(--wash) 86%)}.hero img.heroimg{width:100%;height:54vh;object-fit:cover;display:block}
-.hero .in,main,footer{max-width:1120px;margin:0 auto;padding:1rem 6vw 2rem}.logo{width:210px;background:var(--foam)}
-nav{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0}
-.btn{display:inline-block;text-decoration:none;font-family:'Barlow',sans-serif;font-size:1.08rem;color:var(--foam);background:var(--tar);border:2px solid var(--tar);border-top:9px solid #3a3f42;border-radius:3px;padding:.75rem 1.2rem;box-shadow:inset 0 0 0 3px var(--tar),inset 0 0 0 5px var(--teal);transition:background .15s}
-.btn:hover{background:#3d4448}.btn:active{transform:translateY(3px)}
-.btn:focus-visible{outline:3px double var(--amber);outline-offset:3px}
-a{color:var(--teal)}a::before{content:'';display:inline-block;width:11px;height:15px;margin-right:.5em;border:2px solid var(--tar);border-radius:2px;vertical-align:-2px}
-a:hover{color:var(--tar)}a:hover::before{border-color:var(--amber);background:var(--amber)}
-.btn::before{content:none}
-.plate{background:var(--foam);border:1px solid #c3c9c4;border-top:10px solid var(--teal);padding:.4rem 1.5rem 1.3rem;margin:1.8rem 0;position:relative}
-.plate .watch{position:absolute;top:.8rem;right:1rem;font-family:'Barlow',sans-serif;border:2px solid var(--teal);padding:.1rem .6rem;color:var(--teal)}
-pre{background:var(--tar);color:var(--foam);padding:1rem;overflow-x:auto}
-.tide{height:22px;margin:1.6rem 0;border-top:2px solid var(--teal);border-bottom:1px solid var(--teal)}
-.callout{background:#fff;border:2px solid var(--teal);padding:.2rem 1.3rem 1rem;margin:1.3rem 0;transform:rotate(-.4deg)}
-.fail{color:#9a6206;font-weight:700}
-.entry{display:flex;gap:1rem;padding:.55rem 0;border-bottom:1px solid rgba(20,24,26,.2)}.entry b{font-family:'Barlow',sans-serif;min-width:250px}
-.lamp{display:inline-block;width:13px;height:19px;background:var(--amber);border:3px solid var(--tar);vertical-align:-3px;margin-right:.5em}
-table{border-collapse:collapse}td,th{padding:.4rem .8rem;border-bottom:1px solid rgba(20,24,26,.2);text-align:left}
+@font-face { font-family: "Seymour One"; src: url("fonts/SeymourOne-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Red Hat Text"; src: url("fonts/RedHatText-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Red Hat Text"; src: url("fonts/RedHatText-700.woff2") format("woff2"); font-weight: 700; }
+:root {
+  --paper: #f4f3ef; --cream: #e7e4da; --ink: #26241f; --soft: #5d5a4f;
+  --accent: #3c3a33; --deep: #8a6d1f; --line: #cfccc0; --card: #ffffff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--cream); color: var(--ink); font-family: "Red Hat Text", serif; line-height: 1.55; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 20px 64px; }
+header.hero { text-align: center; padding: 52px 0 8px; }
+img.hero-logo { width: min(430px, 82vw); border-radius: 10px; box-shadow: 0 10px 34px rgba(40,32,24,.22); }
+h1, h2 { font-family: "Seymour One", serif; line-height: 1.15; }
+h1 { font-size: clamp(26px, 5vw, 44px); margin: 26px 0 6px; }
+.tagline { color: var(--soft); font-size: 19px; margin: 0 auto; max-width: 680px; }
+.btns { margin: 22px 0 6px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+a.btn { font-family: "Seymour One", serif; text-decoration: none; padding: 11px 22px; border-radius: 999px; border: 2px solid var(--accent); color: var(--accent); background: transparent; }
+a.btn.solid { background: var(--deep); border-color: var(--deep); color: #fff; }
+figure { margin: 30px 0; }
+figure img { width: 100%; border-radius: 10px; display: block; box-shadow: 0 8px 28px rgba(40,32,24,.18); }
+figcaption { color: var(--soft); font-size: 15px; text-align: center; margin-top: 9px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 34px 0; }
+.fact { background: var(--card); border: 1px solid var(--line); border-top: 5px solid var(--accent); border-radius: 8px; padding: 14px 16px; }
+.fact b { display: block; font-family: "Seymour One", serif; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+section { margin: 38px 0; }
+h2 { font-size: 27px; margin: 0 0 12px; border-bottom: 2px solid var(--line); padding-bottom: 7px; }
+code, pre { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+pre { background: #1e1c17; color: #efece0; padding: 15px 18px; border-radius: 8px; overflow-x: auto; font-size: 14.5px; }
+table { border-collapse: collapse; width: 100%; background: var(--card); }
+th, td { border: 1px solid var(--line); padding: 9px 12px; text-align: left; vertical-align: top; }
+th { font-family: "Seymour One", serif; background: var(--cream); }
+.hold { background: #f6f2e4; border: 1px solid #ddd2ae; border-left: 6px solid var(--accent); border-radius: 8px; padding: 16px 20px; }
+.hold h2 { border: none; padding: 0; }
+.hold ul { margin: 8px 0 4px; padding-left: 20px; }
+footer { margin-top: 52px; border-top: 2px solid var(--line); padding-top: 16px; color: var(--soft); font-size: 14.5px; text-align: center; }
 </style>
 </head>
 <body>
+<div class="wrap">
 <header class="hero">
-<img class="heroimg" src="assets/intro-banner.png" alt="A breakwater in a November gale with no lettering: huge sodden near stones at the lower left with foam draining back, the stone arm reaching to its fixed lit lamp, spray breaking over it, and the harbour sheltering behind with oil lanterns and a lit office window">
-<div class="in">
-<img class="logo" src="assets/logo.png" alt="A breakwater lamp close up: a square tar black iron housing with a chamfered cap on a stub of teal stone pier, one glass face burning lantern amber, foam white spray bursting at the pier foot, and the name underneath in Barlow in foam white">
-<h1>codeintel-build-process-integrity-checker</h1>
-<p>A harbour log kept through a storm, one entry per watch. A wall takes weight. A lamp stays lit while it does.</p>
-<nav>
-<a class="btn" href="#work">Check the Build Script</a>
-<a class="btn" href="#params">Set a Baseline Hash</a>
-<a class="btn" href="#params">Run the Scanners</a>
-<a class="btn" href="#params">Show Help</a>
-</nav>
-</div>
+  <img class="hero-logo" src="assets/logo.png" alt="Two great black iron chain links against a steel proving bed, one link marked with a single yellow chalk stroke">
+  <h1>codeintel-build-process-integrity-checker</h1>
+  <p class="tagline">The Proving House. A command line checker that stretches each named build file against the SHA256 baseline hash supplied for it, counts what it checked and what it skipped, and fails the run when a tested file does not match its record.</p>
+  <div class="btns">
+    <a class="btn solid" href="https://github.com/ShadowGuard-AI/codeintel-build-process-integrity-checker">The repository</a>
+    <a class="btn" href="https://github.com/ShadowGuard-AI/codeintel-build-process-integrity-checker/blob/main/main.py">main.py</a>
+  </div>
 </header>
-<main>
-<section class="plate" id="work"><span class="watch">Watch 1</span><h2>Files Against Their Hashes</h2>
-<p>codeintel-build-process-integrity-checker verifies the integrity of the build process by checking build scripts, dependency files, and compiler settings files against supplied SHA256 baseline hashes, and alerts on mismatches.</p>
-<h2>The Build Script Comes First</h2>
-<p>The build script is the primary artifact: a named build script with no baseline hash exits 1. Any other named file with no baseline hash is logged as skipped, one line per file, and a closing summary counts checked and skipped files.</p>
-<h2>Skipped Is Logged, Never Silent</h2>
-<p>A run that checked zero files exits 1. If a scanner the operator asked for is missing or returns non zero, the run ends with a line naming the scanner outcomes and exits 1.</p>
+<figure>
+  <img src="assets/intro-banner.png" alt="The chalk marked chain link close up under the inspector's hand, the great black links running soft behind it along the proving bed">
+  <figcaption>The link under test, marked and measured against its record.</figcaption>
+</figure>
+
+<div class="facts">
+  <div class="fact"><b>Primary artifact</b>The build script, named with --build-script, which is required by the parser</div>
+  <div class="fact"><b>Check</b>The SHA256 of each named file is compared with the baseline hash supplied for it</div>
+  <div class="fact"><b>Summary</b>Each run closes with a count of files checked and files skipped</div>
+  <div class="fact"><b>Scanners</b>Bandit, flake8, pylint, and pyre run only when their flags are given</div>
+</div>
+<section>
+  <h2>Usage</h2>
+  <pre>python3 main.py --build-script FILE [--dependency-file FILE] [--compiler-settings FILE] [--baseline-hash-* HASH] [--run-bandit] [--run-flake8] [--run-pylint] [--run-pyre] [--offensive-scan]</pre>
+  <p>Each named file takes its own baseline hash argument. Nothing is compared against anything the operator did not supply: with no baseline for a file there is no check on it at all.</p>
+<table>
+    <tr><th>Option</th><th>What it does</th></tr>
+    <tr><td><code>--build-script</code></td><td>The primary file to verify. Required. A named file that does not exist exits 1 before anything is checked, and a build script with no baseline is an error and exits 1.</td></tr>
+    <tr><td><code>--dependency-file / --compiler-settings</code></td><td>Further named files. One with no baseline is logged as skipped, one line per file.</td></tr>
+    <tr><td><code>--baseline-hash-*</code></td><td>The supplied SHA256 baseline for its file. A mismatching hash fails the run with exit 1, and a run that checked zero files also exits 1.</td></tr>
+    <tr><td><code>--run-bandit / --run-flake8 / --run-pylint / --run-pyre</code></td><td>Run that scanner against the build script itself; pyre alone runs pyre check in its own project directory. A missing or non zero scanner ends the run with a scanner outcomes line and exit 1.</td></tr>
+    <tr><td><code>--offensive-scan</code></td><td>The README gives this flag No description provided and explains it nowhere. Verified in the code, its only effect is to append -lll to the bandit command; the flake8, pylint, and pyre commands are unchanged by it.</td></tr>
+  </table>
 </section>
-<div class="tide"></div>
-<section class="plate"><span class="watch">Watch 2</span><h2>Fetching the Code, as Printed</h2>
-<pre>git clone https://github.com/ShadowStrikeHQ/codeintel-build-process-integrity-checker</pre>
-<div class="callout"><h3>The Address Names Another Organisation</h3>
-<p>The clone line is printed as printed, inside this fault callout, because the address names ShadowStrikeHQ in place of ShadowGuard-AI. No change of directory step and no dependency step is added here, because the README gives neither.</p></div>
+<figure>
+  <img src="assets/banner.png" alt="A long anchor chain stretched along a steel proving bed in a naval proving house, an inspector marking the link under test with a single yellow chalk stroke, great black links running away to the wall">
+  <figcaption>The proving bed: every length stretched against its record before it is passed.</figcaption>
+</figure>
+<section class="hold">
+  <h2>What a pass means</h2>
+  <ul>
+    <li>A pass means every checked file matched the baseline its operator supplied. Files without baselines are skipped, not verified.</li>
+    <li>The summary counts checked and skipped files; read it before trusting the exit code alone.</li>
+  </ul>
 </section>
-<div class="tide"></div>
-<section class="plate" id="usage"><span class="watch">Watch 3</span><h2>Usage, the Placeholder Line</h2>
-<pre>./codeintel-build-process-integrity-checker [params]</pre>
-<p>The usage line as printed, set large. The repository ships no executable of that name in the README's account; the bracketed word params stands in for the twelve parameters listed on the next leaf; the README gives no worked example of a run. The printed line is kept as the README gives it, and its standing is named here as a placeholder rather than tidied away.</p>
-<h2>A Run That Checks Nothing Fails</h2>
-<p>That rule stands on the first leaf and is repeated in the run account on the fifth leaf: a run that checked zero files exits 1 rather than passing in silence.</p>
+<section>
+  <h2>Requirements</h2>
+  <p>Python, plus bandit, flake8, pylint, and pyre-check, each 1.0.0 or later, for the scanner flags.</p>
 </section>
-<div class="tide"></div>
-<section class="plate" id="params"><span class="watch">Watch 4</span><h2>The Parameter Register, Twelve Entries</h2>
-<div class="entry"><b><span class="lamp"></span>--build-script</b><span>No description provided, as printed. Flagged in the callout below.</span></div>
-<div class="entry"><b>--dependency-file</b><span>No description provided, as printed. Flagged in the callout below.</span></div>
-<div class="entry"><b>--compiler-settings</b><span>No description provided, as printed. Flagged in the callout below.</span></div>
-<div class="entry"><b><span class="lamp"></span>--baseline-hash-build-script</b><span>Takes the baseline SHA256 hash of the build script, and if provided, the script hash will be checked against it.</span></div>
-<div class="entry"><b>--baseline-hash-dependency-file</b><span>Takes the baseline SHA256 hash of the dependency file, on the same pattern.</span></div>
-<div class="entry"><b>--baseline-hash-compiler-settings</b><span>Takes the baseline SHA256 hash of the compiler settings file, on the same pattern.</span></div>
-<div class="entry"><b><span class="lamp"></span>--run-bandit</b><span>Runs the Bandit security scanner.</span></div>
-<div class="entry"><b>--run-flake8</b><span>Runs the Flake8 code linter.</span></div>
-<div class="entry"><b>--run-pylint</b><span>Runs the Pylint code analyser.</span></div>
-<div class="entry"><b>--run-pyre</b><span>Runs the Pyre type checker.</span></div>
-<div class="entry"><b><span class="lamp"></span>--offensive-scan</b><span>No description provided, as printed, at full size in the callout below.</span></div>
-<div class="callout"><h3>No Description Provided, as Printed</h3>
-<p>Three parameters naming the very files the tool exists to check, --build-script, --dependency-file, and --compiler-settings, each receive the words No description provided in the README, and they are kept visible here exactly as printed. The flag --offensive-scan closes the list with the same words: the README gives this flag no description at all, so no purpose is invented for it on this site.</p></div>
-</section>
-<div class="tide"></div>
-<section class="plate"><span class="watch">Watch 5</span><h2>What an Actual Run Does</h2>
-<p>A named file with a baseline hash gets checked against that hash; a mismatch raises an alert. A named build script without a baseline ends the run at exit 1 at once, whereas any other named file without a baseline is logged as skipped, one line per file. At the close, a summary counts checked and skipped files, and a run that checked zero files exits 1 rather than passing in silence.</p>
-<h2>When a Scanner Fails</h2>
-<p class="fail">A scanner asked for with --run-bandit, --run-flake8, --run-pylint, or --run-pyre that is missing or returns non zero ends the run with a line naming the scanner outcomes and exit 1.</p>
-<p><a href="https://github.com/ShadowGuard-AI/codeintel-build-process-integrity-checker">The repository on GitHub</a></p>
-</section>
-<div class="tide"></div>
-<section class="plate"><span class="watch">Watch 6</span><h2>Licence, the Closing Entry</h2>
-<pre>Copyright (c) ShadowStrikeHQ</pre>
-<div class="callout"><h3>The Address Names Another Organisation</h3>
-<p>The licence line as the README prints it, inside this fault callout for the same wrong organisation name as the clone line, with the plain note that the README names no licence in that line.</p></div>
-</section>
-</main>
 <footer>
-<img src="assets/banner.png" alt="The long stone arm in a November gale running lower left to centre, spray carried clean over the top, the lit lamp small at its far end, oil lanterns and tarred barrels in the lee, and the name painted on the lamp room door" style="width:100%">
-<p>codeintel-build-process-integrity-checker. Sea fallen, stones drying, lamp still lit, log shut on a summary in which every checked file was counted.</p>
+<p>The README of codeintel-build-process-integrity-checker closes with a copyright line naming ShadowStrikeHQ, and its clone URL names the same stale org; the repository carries a separate LICENSE file headed MIT License. Site type is set in Seymour One and Red Hat Text, self-hosted under the SIL Open Font License.</p>
 </footer>
+</div>
 </body>
 </html>
